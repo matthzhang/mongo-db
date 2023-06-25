@@ -1,0 +1,52 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=rootuser
+      - MONGO_INITDB_ROOT_PASSWORD=rootpass
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=rootuser
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=rootpass
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+# 2 containers: mongodb and mongo-express
+volumes:
+  data: {}
+
+networks:
+  default:
+    name: mongodb_network
+
+# command to run in terminal: docker-compose -f docker-compose.yaml up -d
+# localhost:8081 goes to mongo-express (graphic ui to manage mongo db)
+
+# steps to run in powershell
+# cat docker-compose.yaml (copies docker-compose.yaml)
+# docker-compose -f docker-compose.yaml up -d OR docker compose up (deploys containers)
+# remove containers: docker compose down (after cntrl c, loses access to previous data)
+# run in detached mode: docker compose up -d (terminal still available after deploying)
+# docker compose start AND docker compose stop (doesn't lose database)
+
+# Mongo shell:
+# docker ps (shows running containers and their id) -> copy container id for mongo-express (ex. 88ef4aa13a05) ->
+# docker exec -it 88ef4aa13a05 bash (enters mongo-express container from terminal)
+# mongo mongodb://localhost:27017 -u rootuser -p rootpass (connect to mongodb from shell)
+
+# cmds after connecting to db in mongo shell:
+# show dbs; (lists all databases IF they have a collection)
+# use dbName; (creates db named dbName if it does not exist, otherwise switches to dbName) -> newly created db will not appear in show dbs (no collections yet)
+# db.getName(); (gets database name)
+# db.createCollection("hello"); (creates collection called hello in dbName)
+# db.dropDatabase(); (deletes database)
+# db.help(); (lists all available methods)
