@@ -50,3 +50,64 @@ networks:
 # db.createCollection("hello"); (creates collection called hello in dbName)
 # db.dropDatabase(); (deletes database)
 # db.help(); (lists all available methods)
+
+# mongo structure: data stored in documents (rows) in collections (table)
+
+# Creating collections in shell:
+# db.createCollection(name, {size:..., capped..., max:...});
+# db.createCollection("person"); (creates collection called person, other params optional)
+# show collections; (shows all collections in db)
+# db.person.stats(); (gives info about person collection)
+# db.person.drop(); (deletes person collection from db)
+# db.createCollection("person", {capped: true, size: 6142800, max: 3000});
+# capped: provides limit, size: number of bytes, max: max number of documents
+
+# add element to student collection:
+# define student variable in shell
+# student = {
+#     "firstName": "Matthew",
+#     "lastName": "Zhang",
+#     "email": "zhan7342@umn.edu",
+#     "gender": "F",
+#     "country": "USA",
+#     "isStudentActive": false,
+#     "favoriteSubjects": [
+#         "math",
+#         "english",
+#         "IT"
+#     ],
+#     "totalSpentInBooks": 0.00
+# }
+#
+# db.student.insert(student); (only inserts one document)
+#
+# db.student.count(); (counts number of documents inserted - 1)
+# if student collection does not exist and insert cmd is executed, student collection will auto create first and then values inserted
+# db.student.find(); (returns all students from collection)
+# db.student.find().pretty(); (returns all students in more readable format)
+# _id variable gets auto created whenever a new document is added into a collection 
+
+# queries in mongodb
+# define array of students:
+# db.student.insertMany(students); (takes array of documents i.e. students, inserts each array element into student collection)
+#
+# find function:
+# .find() takes criteria (what to search by) and projection (specific "columns" to return from documents with matching criteria)
+# db.student.find({}).pretty(); (returns all students, empty criteria)
+# db.student.find({firstName: 'Matthew'}).pretty(); (returns all document info of document with firsName == 'Matthew')
+# db.student.find({firstName: 'Matthew'}, {firstName: 1, lastName: 1}).pretty(); (only returns firstName and lastName of documents with firstName of 'Matthew', _id variable will always be returned)
+# db.student.find({firstName: 'Matthew'}, {firstName: 0, lastName: 0}).pretty(); (returns all fields except for firstName and lastName for documents with firstName == 'Matthew')
+#
+# updating documents
+# db.student.update({_id: ObjectId("123456")}, {$set: {firstName: 'Matt'}}); (updates firstName of document with id of ObjectId("123456") to 'Matt')
+# db.student.update({_id: ObjectId("123456")}, {$unset: {lastName: 1}}); (removes lastName property from document with id of ObjectId("123456")
+# 
+# db.student.update({_id: ObjectId("123456")}, {$inc: {totalSpentInBooks, 999}}); (adds 999 to totalSpentInBooks property from document with given id)
+# db.student.update({_id: ObjectId("123456")}, {$pull: {favoriteSubjects, 'it'}}); (removes 'it' from favoriteSubjects property for student with given id)
+# db.student.update({_id: ObjectId("123456")}, {$push: {favoriteSubjects, 'it'}}); (adds 'it' to favoriteSubjects property for student with given id)
+
+# delete from collection
+# db.student.deleteOne({_id: ObjectId("123456")}); (deletes student with given id)
+# db.student.deleteOne({}); (still deletes one element from the collection)
+# db.student.deleteMany({gender: 'M'}); (deletes all documents with gender == 'M')
+# db.student.deleteMany({}); (deletes all entries in collection)
